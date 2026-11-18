@@ -1,0 +1,55 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Ework Platform",
+      "type": "shell",
+      "command": "node e_workfroce-main/Ework-clean/Ework/scripts/dev.js",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Starting Ework Workspace",
+          "endsPattern": "http://localhost:5173"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Start Backend Only (:5000)",
+      "type": "shell",
+      "command": "node --experimental-sqlite src/server.js",
+      "options": {
+        "cwd": "${workspaceFolder}/e_workfroce-main/Ework-clean/Ework/backend"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Dashboard Only (:5173)",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/e_workfroce-main/Ework-clean/Ework/admin_dashboard"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Push to GitHub",
+      "type": "shell",
+      "command": ".\\push_to_github.bat",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
+}
