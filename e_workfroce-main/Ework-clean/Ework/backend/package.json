@@ -5,12 +5,16 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
+    "build": "npm run build --prefix ../admin_dashboard",
     "start": "node --experimental-sqlite src/server.js",
     "dev": "node --experimental-sqlite src/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",
     "cors": "^2.8.6",

@@ -170,7 +170,10 @@ class OfflineSyncEngine {
   }
 
   // Asynchronously flush queue with simulated network propagation
-  async flushQueue(apiBase = 'http://localhost:5000/api') {
+  async flushQueue(apiBase) {
+    const resolvedApiBase = apiBase || ((typeof window !== 'undefined' && window.location.port === '5173')
+      ? 'http://localhost:5000/api'
+      : '/api');
     if (this.networkCondition === 'offline') {
       console.warn('Cannot flush queue: simulated network is offline.');
       return 0;
@@ -191,20 +194,20 @@ class OfflineSyncEngine {
 
       try {
         if (item.type === 'attendance') {
-          await fetch(`${apiBase}/attendance/check-in`, {
+          await fetch(`${resolvedApiBase}/attendance/check-in`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(item.payload)
           }).catch(() => null);
         } else if (item.type === 'task_proof') {
           const taskId = item.payload.taskId || '1436a466-987d-4c66-886f-3fe85c210d91';
-          await fetch(`${apiBase}/tasks/${taskId}/proof`, {
+          await fetch(`${resolvedApiBase}/tasks/${taskId}/proof`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(item.payload)
           }).catch(() => null);
         } else if (item.type === 'expense') {
-          await fetch(`${apiBase}/expenses`, {
+          await fetch(`${resolvedApiBase}/expenses`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(item.payload)

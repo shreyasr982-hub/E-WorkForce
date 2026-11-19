@@ -7,7 +7,9 @@ import AssetBarcodeScannerModal from '../components/AssetBarcodeScannerModal.jsx
 import AssetInspectionModal from '../components/AssetInspectionModal.jsx';
 import { soundService } from '../utils/soundService.js';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000/api'
+  : '/api';
 
 const STATUS_STYLE = {
   available: 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30 font-semibold',

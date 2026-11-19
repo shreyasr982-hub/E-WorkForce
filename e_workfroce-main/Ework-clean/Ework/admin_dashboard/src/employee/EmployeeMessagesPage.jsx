@@ -5,7 +5,9 @@ import {
 } from 'lucide-react';
 import { io } from 'socket.io-client';
 
-const API_BASE = 'http://localhost:5000/api/employee';
+const API_BASE = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000/api/employee'
+  : '/api/employee';
 
 export default function EmployeeMessagesPage({ currentUser }) {
   const [messages, setMessages] = useState([]);
@@ -35,7 +37,10 @@ export default function EmployeeMessagesPage({ currentUser }) {
     fetchMessages();
 
     // Listen for live socket messages
-    const socket = io('http://localhost:5000');
+    const socketUrl = (typeof window !== 'undefined' && window.location.port === '5173')
+      ? 'http://localhost:5000'
+      : (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5000');
+    const socket = io(socketUrl);
     socket.on('new_message', (msg) => {
       setMessages(prev => [...prev.filter(m => m.id !== msg.id), msg]);
     });

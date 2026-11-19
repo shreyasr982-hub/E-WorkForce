@@ -208,7 +208,8 @@ export default function RouteOptimizerModal({ isOpen, onClose, employeeName = 'R
   const handleDispatch = async () => {
     try {
       setDispatching(true);
-      const res = await fetch('http://localhost:5000/api/routes/dispatch', {
+      const apiBase = (typeof window !== 'undefined' && window.location.port === '5173') ? 'http://localhost:5000' : '';
+      const res = await fetch(`${apiBase}/api/routes/dispatch`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

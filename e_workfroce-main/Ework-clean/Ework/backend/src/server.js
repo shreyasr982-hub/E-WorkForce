@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import apiRouter from './routes/index.js';
 import { initDatabase } from './config/database.js';
@@ -31,11 +32,27 @@ const downloadsPublic = path.resolve(__dirname, '../../admin_dashboard/public/do
 app.use('/downloads', express.static(downloadsDist));
 app.use('/downloads', express.static(downloadsPublic));
 
+// Serve built frontend dashboard if dist exists (enabling single-service full-stack deployment)
+const dashboardDist = path.resolve(__dirname, '../../admin_dashboard/dist');
+if (fs.existsSync(dashboardDist)) {
+  app.use(express.static(dashboardDist));
+}
+
 // Inject io into every request
 app.set('io', io);
 
-// Root welcome endpoint
-app.get('/', (req, res) => {
+// Mount API routes
+app.use('/api', apiRouter);
+
+// Fallback: serve React index.html for client-side routing, or API welcome JSON if dist not built
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/downloads') || req.path.startsWith('/socket.io')) {
+    return next();
+  }
+  const indexPath = path.join(dashboardDist, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
   res.json({
     name: 'Ework / TaskRoom Backend API',
     status: 'online',
@@ -50,12 +67,9 @@ app.get('/', (req, res) => {
       chat: '/api/chat/messages',
       sos: '/api/sos'
     },
-    web_dashboard: 'http://localhost:5173'
+    web_dashboard: 'Build admin_dashboard to view web UI here'
   });
 });
-
-// Mount API routes
-app.use('/api', apiRouter);
 
 // WebSocket: Real-time GPS tracking & chat rooms
 io.on('connection', (socket) => {
@@ -83,7 +97,7 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`🚀 Ework Backend API running on http://localhost:${PORT}`);
-  console.log(`📡 WebSocket server active on ws://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Ework Backend API running on http://0.0.0.0:${PORT}`);
+  console.log(`📡 WebSocket server active on ws://0.0.0.0:${PORT}`);
 });

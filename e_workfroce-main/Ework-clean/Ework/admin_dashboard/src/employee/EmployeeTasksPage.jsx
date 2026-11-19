@@ -5,7 +5,9 @@ import {
   Sparkles, ShieldCheck, Filter, RefreshCw, Upload
 } from 'lucide-react';
 
-const API_BASE = 'http://localhost:5000/api/employee';
+const API_BASE = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000/api/employee'
+  : '/api/employee';
 
 const PRIORITY_BADGES = {
   urgent: 'bg-red-500/15 text-red-600 dark:text-red-400 border-red-500/30',

@@ -7,7 +7,12 @@ import {
 } from 'lucide-react';
 import SalarySlipModal from '../components/SalarySlipModal';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000/api'
+  : '/api';
+const socketUrl = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000'
+  : (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5000');
 
 const STATUS_STYLE = {
   present: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 font-bold',
@@ -152,7 +157,7 @@ export default function AttendancePage({ darkMode = false }) {
     fetchAttendance();
     fetchSites();
 
-    const socket = io('http://localhost:5000');
+    const socket = io(socketUrl);
     socket.on('employee_checked_in', () => {
       fetchAttendance();
     });

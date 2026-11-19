@@ -16,6 +16,11 @@ const INITIAL_MSGS = [
   { id: 4, from: 'Manager', text: 'Approved. Check the parts inventory in the van. Serial: COMP-2291.', time: '09:35 AM', mine: true },
 ];
 
+const apiBase = (typeof window !== 'undefined' && window.location.port === '5173') ? 'http://localhost:5000' : '';
+const socketUrl = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000'
+  : (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5000');
+
 export default function ChatPage({ darkMode = false }) {
   const [selected, setSelected] = useState(CONTACTS[0]);
   const [messages, setMessages] = useState(INITIAL_MSGS);
@@ -29,7 +34,7 @@ export default function ChatPage({ darkMode = false }) {
 
   const fetchChatHistory = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/chat/messages');
+      const res = await fetch(`${apiBase}/api/chat/messages`);
       const data = await res.json();
       if (data.success && Array.isArray(data.data) && data.data.length > 0) {
         const loaded = data.data.map(m => ({
@@ -50,7 +55,7 @@ export default function ChatPage({ darkMode = false }) {
   useEffect(() => {
     fetchChatHistory();
 
-    const s = io('http://localhost:5000');
+    const s = io(socketUrl);
     setSocket(s);
 
     s.on('connect', () => {
@@ -99,7 +104,7 @@ export default function ChatPage({ darkMode = false }) {
     }
 
     try {
-      await fetch('http://localhost:5000/api/chat/messages', {
+      await fetch(`${apiBase}/api/chat/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

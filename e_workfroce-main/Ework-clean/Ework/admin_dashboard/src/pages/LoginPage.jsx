@@ -180,9 +180,12 @@ export default function LoginPage({
     };
 
     try {
+      const apiBase = (typeof window !== 'undefined' && window.location.port === '5173')
+        ? 'http://localhost:5000'
+        : '';
       const endpoint = authMode === 'register'
-        ? 'http://localhost:5000/api/auth/sign-up'
-        : 'http://localhost:5000/api/auth/sign-in';
+        ? `${apiBase}/api/auth/sign-up`
+        : `${apiBase}/api/auth/sign-in`;
 
       const res = await fetch(endpoint, {
         method: 'POST',

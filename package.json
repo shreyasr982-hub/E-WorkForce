@@ -2,12 +2,15 @@
   "name": "ework-root",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "scripts": {
+    "build": "npm run build --prefix e_workfroce-main/Ework-clean/Ework/admin_dashboard",
+    "start": "node --experimental-sqlite e_workfroce-main/Ework-clean/Ework/backend/src/server.js",
     "dev": "node e_workfroce-main/Ework-clean/Ework/scripts/dev.js",
-    "start": "node e_workfroce-main/Ework-clean/Ework/scripts/dev.js",
     "dev:backend": "npm run dev --prefix e_workfroce-main/Ework-clean/Ework/backend",
     "dev:dashboard": "npm run dev --prefix e_workfroce-main/Ework-clean/Ework/admin_dashboard",
-    "build": "npm run build --prefix e_workfroce-main/Ework-clean/Ework",
     "install:all": "npm install --prefix e_workfroce-main/Ework-clean/Ework/backend && npm install --prefix e_workfroce-main/Ework-clean/Ework/admin_dashboard",
     "push": ".\\push_to_github.bat"
   }

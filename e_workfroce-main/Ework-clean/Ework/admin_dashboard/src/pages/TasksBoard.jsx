@@ -12,7 +12,12 @@ import WorkOrderCertificateModal from '../components/WorkOrderCertificateModal';
 import CustomerAlertDispatcherModal from '../components/CustomerAlertDispatcherModal';
 import CustomerTrackingPortalModal from '../components/CustomerTrackingPortalModal';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000/api'
+  : '/api';
+const socketUrl = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000'
+  : (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5000');
 
 const EMPLOYEES = ['Rahul Sharma', 'Priya Patel', 'Amit Verma', 'Sneha Rao'];
 
@@ -216,7 +221,7 @@ export default function TasksBoard({ darkMode = false }) {
   useEffect(() => {
     fetchTasks();
 
-    const socket = io('http://localhost:5000');
+    const socket = io(socketUrl);
     socket.on('task_created', (newTask) => {
       setTasks(prev => [newTask, ...prev.filter(t => t.id !== newTask.id)]);
     });

@@ -6,7 +6,9 @@ import {
 } from 'lucide-react';
 import { soundService } from '../utils/soundService.js';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000/api'
+  : '/api';
 const SUPABASE_PROJECT_URL = 'https://supabase.com/dashboard/project/ptxfxtxwytrzznswudlc/database/tables';
 const SUPABASE_SQL_EDITOR_URL = 'https://supabase.com/dashboard/project/ptxfxtxwytrzznswudlc/sql/new';
 

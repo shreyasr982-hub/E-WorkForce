@@ -5,7 +5,9 @@ import {
   Bell, ArrowRight, ShieldCheck, CheckSquare, Sparkles, RefreshCw
 } from 'lucide-react';
 
-const API_BASE = 'http://localhost:5000/api/employee';
+const API_BASE = (typeof window !== 'undefined' && window.location.port === '5173')
+  ? 'http://localhost:5000/api/employee'
+  : '/api/employee';
 
 export default function EmployeeDashboard({ currentUser, onNavigate }) {
   const [loading, setLoading] = useState(true);

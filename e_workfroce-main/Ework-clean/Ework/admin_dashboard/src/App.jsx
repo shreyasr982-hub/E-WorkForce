@@ -613,7 +613,10 @@ function LiveTrackingView({ onTriggerSos, sosAlerts, darkMode = false }) {
 
   // Connect to live WebSocket
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socketUrl = (typeof window !== 'undefined' && window.location.port === '5173')
+      ? 'http://localhost:5000'
+      : (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5000');
+    const socket = io(socketUrl);
     setActiveSocket(socket);
 
     socket.on('connect', () => {
